@@ -14,4 +14,4 @@ function categorie(capacite) {
   return "Grand site";
 }
 
-console.log(categorie(120));
+console.log(categorie(capacite));
