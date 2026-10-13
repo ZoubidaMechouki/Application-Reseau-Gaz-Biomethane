@@ -1,0 +1,10 @@
+# Python (pour plus tard)
+.venv/
+__pycache__/
+
+# Éditeur et système
+.vscode/
+.DS_Store
+
+# Secrets
+.env
