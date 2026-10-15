@@ -105,3 +105,32 @@ console.log(capacites);
 let mongrandSite = sites.find(site => site.capacite >= 100);
 
 console.log(mongrandSite);
+
+ let grandsSite = sites.filter(site => site.capacite >= 100);
+
+console.log(grandsSite);
+
+let nomsGrandsSites = grandsSites.map(site => site.nom);
+
+console.log(nomsGrandsSites);
+
+let nomsGrandsSite = sites.filter(site => site.capacite >= 100).map(site => site.nom);
+
+
+console.log(nomsGrandsSite);
+
+let capaciteTotale = sites.reduce((total, site) => total + site.capacite, 0);
+
+console.log(capaciteTotale);
+
+let totalGrandsSites = sites.filter(site => site.capacite >= 100).reduce((total, site) => total + site.capacite, 0);
+
+console.log(totalGrandsSites);
+
+let moyenneSites = capaciteTotale / sites.length;
+console.log("Capacité moyenne :", moyenneSites);
+
+let moyennesSites = sites.reduce((total, site) => total + site.capacite, 0) / sites.length;
+
+console.log("Capacité moyenne :", moyenneSites);
+
