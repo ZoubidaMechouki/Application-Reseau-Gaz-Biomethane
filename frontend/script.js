@@ -44,4 +44,29 @@ console.log(sites[3].nom);
 console.log(sites[3].capacite);
 console.log(categorie(sites[1].capacite));
 
+// Parcourir tous les sites
+for (let site of sites) {
+  console.log(site.nom,":", site.region);
+}
+
+let total = 0;
+
+for (let site of sites) {
+  total = total + site.capacite;
+}
+
+console.log("Capacité totale :", total);
+
+let nbGrandsSites = 0;
+
+for (let site of sites) {
+  if ( site.capacite >= 100 ) {
+    nbGrandsSites = nbGrandsSites + 1;
+  }
+}
+
+console.log("Nombre de grands sites :", nbGrandsSites);
+
+let moyenne = total / sites.length;
+console.log("Capacité moyenne :", moyenne);
 
