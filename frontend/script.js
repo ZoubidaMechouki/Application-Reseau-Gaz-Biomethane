@@ -70,3 +70,38 @@ console.log("Nombre de grands sites :", nbGrandsSites);
 let moyenne = total / sites.length;
 console.log("Capacité moyenne :", moyenne);
 
+let grandsSites = sites.filter(site => site.capacite >= 100);
+
+console.log(grandsSites);
+console.log(grandsSites.length);
+
+function estGrandSite(site) {
+  return site.capacite >= 100;
+}
+
+let petitsSites = sites.filter(site => site.capacite < 100);
+
+console.log(petitsSites);
+console.log(petitsSites.length);
+
+let sitesBretagne = sites.filter(site => site.region === "Bretagne");
+
+console.log(sitesBretagne);
+console.log(sitesBretagne.length);
+
+let grandsSitesBretagne = sites.filter(site => site.region === "Bretagne" && site.capacite >= 100);
+
+console.log(grandsSitesBretagne);
+console.log(grandsSitesBretagne.length);
+
+let noms = sites.map(site => site.nom);
+
+console.log(noms);
+
+let capacites = sites.map(site => site.capacite);
+
+console.log(capacites);
+
+let mongrandSite = sites.find(site => site.capacite >= 100);
+
+console.log(mongrandSite);
