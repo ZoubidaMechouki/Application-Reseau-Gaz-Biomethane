@@ -9,12 +9,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19
 }).addTo(map);
 
-/* 3. Ajouter un marqueur de test sur Paris */
-const marker = L.marker([48.8566, 2.3522]).addTo(map);
-
-/* 4. Ajouter une popup au marqueur */
-marker.bindPopup("<b>Bonjour Paris !</b><br>Bienvenue sur ma carte.");
-
 function formaterCapacite(valeur) {
     if (typeof valeur !== "number") {
         return "capacité non renseignée";
@@ -69,14 +63,5 @@ async function chargerSites() {
 
     console.log("Marqueurs créés :", donneesSites.features.length - sitesNonPlaces.length);
     console.log("Sites non placés :", sitesNonPlaces);
-
-    for (const site of sitesNonPlaces) {
-        console.log("Non placé :", site.nom_du_projet, "|", site.commune, "|", site.code_commune);
-    }
-    const sansCapacite = donneesSites.features.filter(
-        site => site.properties.capacite_de_production_gwh_an === null
-    );
-    console.log("Sites sans capacité :", sansCapacite.length);
-    console.log(donneesSites.features.slice(0, 5).map(site => site.properties.capacite_de_production_gwh_an));
 }
 chargerSites();
