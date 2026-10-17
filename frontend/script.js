@@ -15,57 +15,68 @@ const marker = L.marker([48.8566, 2.3522]).addTo(map);
 /* 4. Ajouter une popup au marqueur */
 marker.bindPopup("<b>Bonjour Paris !</b><br>Bienvenue sur ma carte.");
 
+function formaterCapacite(valeur) {
+    if (typeof valeur !== "number") {
+        return "capacité non renseignée";
+    }
+    return valeur.toFixed(1) + " GWh/an";
+}
 async function chargerSites() {
-  /* 1. Charger les deux fichiers */
-  const reponseSites = await fetch("data/sites-injection-biomethane.geojson");
-  const donneesSites = await reponseSites.json();
+    /* 1. Charger les deux fichiers */
+    const reponseSites = await fetch("data/sites-injection-biomethane.geojson");
+    const donneesSites = await reponseSites.json();
 
-  const reponseCommunes = await fetch("data/communes-centres.json");
-  const communes = await reponseCommunes.json();
+    const reponseCommunes = await fetch("data/communes-centres.json");
+    const communes = await reponseCommunes.json();
 
-  console.log("Sites :", donneesSites.features.length);
-  console.log("Communes :", communes.length);
+    console.log("Sites :", donneesSites.features.length);
+    console.log("Communes :", communes.length);
 
-  /* 2. Dictionnaire : code INSEE -> [latitude, longitude] */
-  const centres = {};
-  for (const commune of communes) {
-    if (commune.centre) {
-      const longitude = commune.centre.coordinates[0];
-      const latitude = commune.centre.coordinates[1];
-      centres[commune.code] = [latitude, longitude];
+    /* 2. Dictionnaire : code INSEE -> [latitude, longitude] */
+    const centres = {};
+    for (const commune of communes) {
+        if (commune.centre) {
+            const longitude = commune.centre.coordinates[0];
+            const latitude = commune.centre.coordinates[1];
+            centres[commune.code] = [latitude, longitude];
+        }
     }
-  }
-  console.log("Sequedin :", centres["59566"]);    
+    console.log("Sequedin :", centres["59566"]);
 
-   /* 3. Créer un marqueur par site */
-  const sitesNonPlaces = [];
-  /* Corrections : sites dont le code commune est absent du fichier */
-  const corrections = {
-    "STEP DE SORMIOU - MARSEILLE -13": "13055"
-  };
-  for (const site of donneesSites.features) {
-    const proprietes = site.properties;
-    const code = proprietes.code_commune || corrections[proprietes.nom_du_projet];
-    const position = centres[code]; 
+    /* 3. Créer un marqueur par site */
+    const sitesNonPlaces = [];
+    /* Corrections : sites dont le code commune est absent du fichier */
+    const corrections = {
+        "STEP DE SORMIOU - MARSEILLE -13": "13055"
+    };
+    for (const site of donneesSites.features) {
+        const proprietes = site.properties;
+        const code = proprietes.code_commune || corrections[proprietes.nom_du_projet];
+        const position = centres[code];
 
-    if (position) {
-      L.marker(position)
-        .addTo(map)
-        .bindPopup(
-          `<b>${proprietes.nom_du_projet}</b><br>` +
-          `${proprietes.commune} (${proprietes.departement})<br>` +
-          `${proprietes.capacite_de_production_gwh_an} GWh/an`
-        );
-    } else {
-      sitesNonPlaces.push(proprietes);
+        if (position) {
+            L.marker(position)
+                .addTo(map)
+                .bindPopup(
+                    `<b>${proprietes.nom_du_projet}</b><br>` +
+                    `${proprietes.commune} (${proprietes.departement})<br>` +
+                    `${formaterCapacite(proprietes.capacite_de_production_gwh_an)}`
+                );
+        } else {
+            sitesNonPlaces.push(proprietes);
+        }
     }
-  }
 
-  console.log("Marqueurs créés :", donneesSites.features.length - sitesNonPlaces.length);
-  console.log("Sites non placés :", sitesNonPlaces);
+    console.log("Marqueurs créés :", donneesSites.features.length - sitesNonPlaces.length);
+    console.log("Sites non placés :", sitesNonPlaces);
 
-  for (const site of sitesNonPlaces) {
-    console.log("Non placé :", site.nom_du_projet, "|", site.commune, "|", site.code_commune);
-  }
+    for (const site of sitesNonPlaces) {
+        console.log("Non placé :", site.nom_du_projet, "|", site.commune, "|", site.code_commune);
+    }
+    const sansCapacite = donneesSites.features.filter(
+        site => site.properties.capacite_de_production_gwh_an === null
+    );
+    console.log("Sites sans capacité :", sansCapacite.length);
+    console.log(donneesSites.features.slice(0, 5).map(site => site.properties.capacite_de_production_gwh_an));
 }
 chargerSites();
